@@ -1,8 +1,20 @@
 services:
 
+  nginx:
+    image: nginx:alpine
+    container_name: requestforge-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api
+
   api:
     build: .
     container_name: requestforge-api
+    restart: unless-stopped
     ports:
       - "3000:3000"
     depends_on:
@@ -15,8 +27,6 @@ services:
     image: redis:7-alpine
     container_name: requestforge-redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
     volumes:
       - redis-data:/data
 
